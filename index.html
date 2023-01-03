@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Piano Blend - CSCI 5611</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <!--[if lt IE 7]>
+      <p class="browsehappy">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="#">upgrade your browser</a> to improve your experience.
+      </p>
+    <![endif]-->
+  <h1>Piano Blend</h1>
+  <p>
+    This website was created by Garrett Udstrand (<a href="mailto:udstr013@umn.edu">udstr013@umn.edu</a>),
+    Tyler Heim (<a href="mailto:heim0155@umn.edu">heim0155@umn.edu</a>), and Pranav Pokhrel (<a
+      href="mailto:pokhr013@umn.edu">pokhr013@umn.edu</a>).
+    It is our website submission for the final project in CSCI 5611. We made a realistic piano animation called "Piano
+    Blend". A brief summary of our project
+    can be seen below
+  </p>
+
+  <iframe width="800" height="450" src="https://www.youtube.com/embed/kTRgXyii2l8">
+  </iframe>
+
+
+  <h1>Project Files</h1>
+  <p>
+    This animation was created using <a href="https://www.blender.org/">Blender</a>. Inspiration was taken for
+    the modelling of the piano from <a href="https://www.youtube.com/watch?v=Ge1TYv6vssc">this video</a>, but the
+    decrepit, older look of the piano was replaced with a more modern look. The wood was replaced for a black,
+    laquered wood, the amount of scratches, dust, and general wear and tear in the materials was toned down,
+    and the model was changed to have a simplified, more narrow, and more modern design. Inspiration for creating
+    the hand was taken from <a href="https://www.youtube.com/watch?v=KpokgpH1VvE">this video</a>, but the hand was
+    changed from having a more Pixar-like, cartoon-y design to a quasi-realtic one
+  </p>
+  <p>
+    The Blender files can be
+    <a href="https://github.com/GarrettU27/CSCI5611-FinalProject">
+      found on GitHub here</a>. You can also
+    <a href="https://github.com/GarrettU27/CSCI5611-FinalProject/zipball/master">
+      download a ZIP of the repository here.
+    </a>
+  </p>
+
+  <h1>Table of Contents</h1>
+  <ul>
+    <li><a href="#intro">Introduction</a></li>
+    <li><a href="#final-state">Project's Final State</a></li>
+    <li><a href="#key-algo-and-approach">Key Algorithms and Approaches</a></li>
+    <li><a href="#qa">Q&A</a></li>
+    <li><a href="#story">Story of the Project</a></li>
+    <li><a href="#feedback">Feedback</a></li>
+    <li><a href="#relationship">Relationship to the State of the Art</a></li>
+    <li><a href="#extension">How the Project Could be Extended</a></li>
+  </ul>
+
+  <h1 id="intro">Introduction</h1>
+  <p>
+    Musical instrument animation has been a hot topic in recent years. Pixar’s “Coco” recorded musicians playing the
+    guitar to make sure Miguel and everybody else’s guitar playing was accurate and realistic. And, if the critical
+    reception from musician’s is to be believed, it largely was. Only 3 years later, Pixar revisited animating
+    musicians, and “Soul” made headlines for its piano playing scenes. The main character not only was playing the notes
+    heard in the soundtrack, but the posture and the general movements of the character were accurate, save for some
+    exaggeration. Needless to say, there is a decent amount of interest in musical animation. A surprising number of
+    animated movies have characters playing instruments in them, and people generally get excited when the playing of
+    instruments is animated properly, particularly musicians. As a result, our project, Piano Blend, is an attempt at
+    creating a realistic looking animation of two hands playing a piano.
+  </p>
+  <p>
+    However, there are a few key problems when it comes to animating a musician playing an instrument. The first is that
+    the musician needs to play the right notes, and this is not just about pitch. Depending on the instrument, there are
+    different ways to articulate the note. A saxophone requires the player to hit their tongue against the tip of a reed
+    and blow air to continue the vibration. On the other hand, a violin uses a bow to rub a horsehair across a string to
+    begin a note.
+
+  </p>
+  <p>
+    This change in articulation also affects how accenting notes (or making the note sound “harder”) happens. With a
+    saxophone player, they simply hit their tongue harder against the reed. A violinist moves the horsehair faster when
+    they start playing the note and digs the horsehair more into the string.
+  </p>
+  <p>
+    Further, you have to consider note decay. A saxophone player can keep a note going for as long as they have breath
+    in their lungs, but higher level saxophone players can employ circular breathing techniques, which allow them to
+    play the note for as long as they want, basically. A violinist is similar. They can continue the note for as long as
+    they have more horsehair to move across the string. But, if they reverse the direction of the bow slowly enough,
+    they can make the note go on, just like saxophonists, for as long as they want. However, a pianist either has their
+    note decay in a second, or holds the sustain pedal to let it go on for longer. But, a pianist is limited in the
+    length of their note. Once the string stops ringing the note is over. The only way to keep the note sustained longer
+    than that is to very lightly tap the key, and this can really only work with quieter notes
+
+  </p>
+  <p>
+    Speaking of dynamics, different instruments have different ways of changing dynamics. Saxophonists blow more air
+    through the instrument. Violinists move the horsehair faster. But, with something like a Piano, the player has to
+    actively be hitting the notes softer so then they can hit them consistently harder later on to get a louder effect.
+
+  </p>
+  <p>
+    This is all on top of having the players hit the right notes at the right times on their respective instruments,
+    which are not all tuned the same way (a note is not the same on all instruments, a C on a piano is an E flat on a
+    saxophone), and every one of these differences has an effect on how a certain player will be animated. Further,
+    instruments often come in diverse groups. Characters are often playing in bands or part of musical festivals, and
+    the music played for these in a movie can be long and complex.
+
+  </p>
+  <p>
+    Considering the complexity of the problem, and just how massively it can snowball, there is a real push to find ways
+    to make this task easier for digital artists. Generally, solutions to this problem, both in the past and the
+    present, involve somehow producing the majority of the final animation from a real musician. One is to just record a
+    musician playing their instrument and then to recreate that recording in animation. That’s what Pixar animators did
+    for “Coco”. They got videos of musicians playing their instruments with the music in their soundtrack, and simply
+    recreated it in animation. Another is to record the musician, but to digitally record the notes being played. Then,
+    you can use the digitally recorded notes to tell the fingers in the hand what notes to hit. After you’ve done that,
+    you only have to touch up the computer generated animation using the video as a reference. This is how Pixar
+    animators made “Soul”. Finally, motion capture technologies are always an option. However, this one doesn’t seem too
+    common. This is probably due to motion capture suits being bulky, which means they probably get in the way of a
+    person playing an instrument properly and naturally. Further, mocap suits never have been too good with smaller
+    motions, like the finger motions required to play an instrument. But, there has been a lot of research into
+    producing pose skeletons from normal videos of people. Most likely, when that technology has matured in the future,
+    this will be a very common way to animate musicians playing instruments.
+
+  </p>
+  <p>
+    Our approach was the basic one, quite like “Coco”. We created pose skeletons for both the hand and piano and created
+    keyframes to animate it. These pose skeletons had rotational and positional constraints, and Blender was able to use
+    an IK solver to animate the 3D models between these poses. Apart from this, we used some of the pre-existing tools
+    that Blender has to offer for generation and development of animated objects in 3D such as modeling using geometry
+    nodes, sculpting, rendering, UV wrapping, texture painting etc.
+
+  </p>
+
+  <h1 id="final-state">Project's Final State</h1>
+  <p>
+    As said in the beginning, our project is an attempt at creating a realistic looking animation of two hands playing a
+    piano. The piano playing was modeled off a video that we shot of one of us playing it. The video below shows two
+    things: one, the video we modeled the animation off of and two, the animation we created based on that video
+
+  </p>
+  <video width="800" controls>
+    <source src="./FinalState.mp4" type="video/mp4" />
+  </video>
+
+  <h1 id="key-algo-and-approach">Key Algorithms and Approaches</h1>
+  <p>
+    For this project, we modeled the hands and the piano in Blender. After that, we created pose skeletons for both the
+    hands and the piano. Further, these pose skeletons were encoded with specific rotational and positional constraints
+    to ensure that the model never was in a state that was impossible or unrealistic. In the video below, you can see
+    the piano’s pose skeleton being used to move a piano key, and you can see that the key is limited to a certain range
+    of motion that is both possible and realistic looking for that piano key.
+
+  </p>
+  <p>
+    With these two things, we could animate both the hands and the piano. Essentially, to animate the piano, you set
+    keyframes, which are certain positions and rotations of a 3D model at certain moments in time. You might set a
+    keyframe two keyframes of a hand and piano, and Blender would then linearly interpolate between those two states of
+    the hand and piano. The result would look something like this
+  </p>
+
+  <video width="800" controls>
+    <source src="./Keyframe_Example.mp4" type="video/mp4" />
+  </video>
+
+  <p>
+    Ultimately, this entire animation is made up of a lot of keyframes set at certain moments in time to make the model
+    move in realistic looking ways. It involved meticulously moving through the video to look for key points in time for
+    both the piano keys and hands, and setting the keyframes at these times to look like the real video, repeating ad
+    nauseam. Some minute detail and added motion for inactive fingers was included in the animation to give the hands
+    more life.
+
+  </p>
+  <p>
+    In terms of how Blender animates the video, the actual algorithms that it had to use were simple enough. We created
+    pose skeletons for the hand and piano and added rotational and positional constraints to each piece of the skeleton.
+    Then, Blender just had to ensure each pose fit those constraints. After that, when actually viewing the animation,
+    Blender uses an Inverse Kinematics Solver to take the different desired poses and find a path to them. Most likely,
+    Blender linearly interpolates many poses between the starting and ending pose (one for each frame), then uses the
+    Inverse Kinematics solver on each pose. The IK solver they use is called iTaSC, which stands for Instantaneous Task
+    Specification using Constraints. It is a Jacobian-Based IK solver. This means that it takes a Jacobian of the
+    function \(f\), which is a function that takes in a vector of all the joint angles, and gives out a vector of all
+    the
+    joint positions. This can be inverted to do the exact opposite. In math notation, that function would be written
+    like this
+    $$
+    f(\vec{\theta})=\vec{X} \implies \vec{\theta}=f^{-1}(\vec{X})
+    $$
+
+  </p>
+  <p>
+    How the Jacobian of this function is produced is specific to iTaSC, but <a
+      href="https://docs.blender.org/manual/en/latest/animation/armatures/posing/bone_constraints/inverse_kinematics/introduction.html#itasc">according
+      to Blender</a>, the way this Jacobian
+    is produced results in Blender being able to apply more constraints than just the end effector’s position and
+    orientation. In a more normal context, a Jacobian of this function would be produced by taking the partial
+    derivative of its component parts like follows
+    $$\
+    J_{ij}=\frac{\delta f_j}{\delta x_i}
+    $$
+
+  </p>
+  <p>
+    A Jacobian, in this case, can be thought of as a higher dimension derivative. Thus, you can multiply this Jacobian
+    by some change in the angles \(\textrm{d}\vec{\theta}\) and can produce what the associated small change in
+    positions
+    \(\textrm{d}\vec{X}\). You can also invert this. You can multiply the small change in positions by the inverse of
+    the
+    Jacobian to produce a small change in the angles. In other terms,
+    $$
+    \textrm{d}\vec{X}=J\textrm{d}\vec{\theta} \implies \textrm{d}\vec{\theta}=J^{-1}\textrm{d}\vec{X}
+    $$
+
+  </p>
+  <p>
+    However, just like a derivative, changes at different points in the function. So, as the change in positions or
+    angles becomes larger, it becomes less accurate. This means that you often use the following equation iteratively to
+    solve for the final set of angles, \(\vec{\theta}_f\) using the initial set of angles \(\vec{\theta}_i\) until it is
+    within some desired amount of error.
+    $$
+    \vec{\theta}_f=\vec{\theta_i}+J^{-1}\textrm{d}\vec{X_i}
+    $$
+
+  </p>
+  <p>
+    Further, the Jacobian defined by these problems is not often square, so an approximation of its inverse must be
+    found using a Jacobian solver. In the case of Blender, there are two solvers to choose from and are called
+    Selectively Damped Least Squares (SDLS) and Damped Least Squares (DLS) respectively. For this project, we used SDLS,
+    and the differences between the two were not particularly noticeable or important
+  </p>
+
+  <h1 id="qa">Q&A</h1>
+  <i>Provide side-by-side video comparing your simulations to reality</i>
+  <p>
+    The below video shows the animation side-by-side with the real video
+  </p>
+  <video width="800" controls>
+    <source src="./SideBySide.mp4" type="video/mp4" />
+  </video>
+  <i>List the most important phenomena observed in the real footage and describe in detail how you wrote code, or
+    adapted tools to reproduce each of these phenomena</i>
+  <p>
+    The most important phenomena in the video is the particular fingerings used for each note, the particular keys
+    pressed down and the constraints of movement of both the keys and the hands. In terms of the particular keys and
+    fingerings, we animated this project by hand, and were able to reproduce them by combing through the video and
+    producing matching keyframes. In terms of the constrained movement of both the hands and piano keys, we created pose
+    skeletons for both the hands and piano, and applied rotational and positional constraints to each to keep the models
+    constrained properly.
+
+  </p>
+  <i>
+    Compare the methods you used (or the methods used by the tools you found) to the state-of-the-art
+  </i>
+  <p>
+    Using IK solvers with keyframes to produce animations is what cutting edge studios like Pixar have used in films in
+    recent years such as “Coco”. Even the approach of recording real musicians playing to make the animation more
+    realistic falls in line with how that film was created. However, even more modern films like “Soul” supposedly
+    digitally record the notes and use that to produce the base of a lot of the animations.
+  </p>
+  <p>
+    At the cutting edge of research, <a href="https://arxiv.org/pdf/2203.15458.pdf">Efficient Virtual View Selection for
+      3D Hand Pose Estimation</a> shows that producing
+    pose skeletons from videos of hands without modification is becoming more realistic by the day. <a
+      href="https://dl.acm.org/doi/abs/10.1145/1599301.1599304?casa_token=6JT-KFzeKd0AAAAA:6FUpa4llFLe3ka17anLbNm_31pFubv1qNepBoUtyehVjSiFboh4ssP4tHDly6SbOEJSbHxPJuOU">CG
+      animation for
+      piano performance</a> demonstrates the use of mocap technology to produce piano fingerings and an optimized
+    algorithm
+    that can automatically generate those fingerings. <a href="https://arxiv.org/pdf/2103.10206.pdf">DanceFormer: Music
+      Conditioned 3D Dance Generation with Parametric
+      Motion Transformer</a> covered something slightly less related, but demonstrated how you could generate key poses
+    and
+    curves between those poses to make realistic dance animations that matched the beats of music. A machine learning
+    model learned how to create dances using these two factors, and they could be somewhat randomized. Something like
+    this could easily be applied to piano playing by generating fingerings of different common chords and octaves, and
+    demonstrating curves between those different forms.
+  </p>
+  <p>
+    Clearly, our project did not deal with any of these techniques. While being able to produce the pose skeleton by
+    simply providing the video would significantly speed up the animation process, even if it wasn’t entirely correct,
+    these approaches are complicated, potentially computationally expensive, and, in some cases, require expensive
+    equipment. These barriers of technical prowess, cost and time made implementing any of these not very feasible.
+
+  </p>
+  <i>List several animation or simulation techniques you used in creating your animated story</i>
+  <p>
+    Sadly, there weren’t many animation or simulation techniques used within our project. We keyframed the animation,
+    and the main animation technique used to produce the final result was Inverse Kinematics, which produced the proper
+    joint angles for our skeletons based on the end effectors we chose with each keyframe.
+
+  </p>
+  <i>For each of these techniques, compare the methods you used (or the methods used by the tools you found) to the
+    approach we discussed in class
+  </i>
+  <p>
+    In class, we mainly discussed two IK solvers: Cyclic Coordinate Descent (CCD) and Forward And Backward Reaching
+    Inverse Kinematics (FABRIK). CCD works by first drawing a straight line between the desired end effector position
+    and the second to last joint. Then, you draw a straight line between the actual end effector position and the
+    desired one. Finally, you line up the second line with the first one. Then, you move one joint up the chain, and
+    treat the actual end effector as the desired end effector. You iterate up the entire arm until you have no more
+    joints to calculate the angle of.
+
+  </p>
+  <p>
+    FABRIK works by moving the end effector to the desired position, then moving all the joints behind it until they are
+    the proper distances away. After that, you move the first node to its original position and move the joints to their
+    proper distances again. Then, you check to see if the end effector is close enough to the actual desired position.
+    If not, you repeat the process.
+
+  </p>
+  <p>
+    iTaSC, the IK solver used by Blender, is more mathematically involved. Essentially, it creates a Jacobian matrix out
+    of the joint angles and positions and how they relate to each other. After that, it multiplies the inverse of this
+    Jacobian by a vector of all the angle changes it desires to make and adds that to the current joint angles. Then, it
+    calculates the joint positions based on those angles and determines if the end effector is close enough. If not, it
+    repeats the process.
+
+  </p>
+  <p>
+    As can be seen, iTaSC is more complicated mathematically, but probably will produce a good set of angles and
+    positions with less iterations than FABRIK or CCD will, because it’s guess is a lot more educated and uses the
+    available information of the joint angles and positions to its advantage.
+
+  </p>
+  <i>Characterize the limitations of your approach, and/or the approaches implemented by any tools you used</i>
+  <p>The three key limitations of this approach are as follows:</p>
+  <ol>
+    <li>
+      <p>
+        Hand animation is time consuming. Producing the models for this project required somewhere in the realm of 25
+        hours of work. Adding new instruments or different sets of hands, or even character models to attach to the
+        hands would take just as long if not longer depending on the complexity of the thing being modeled. On top of
+        that, it took somewhere in the realm of 8 hours to produce the 5 second animation you see for our project, and
+        this was a relatively simple example with no musical embellishments.
+
+      </p>
+      <p>
+        Certainly, some amount of this can be blamed on the fact that we were learning how to use Blender for modeling
+        and animating as we created the project, but a significant chunk of that time was spent on creating the final
+        result as quick as a competent modeler and/or animator using Blender would. Simply, the cost of time it takes to
+        model and to animate this by hand is enormous, and has difficulty scaling. That’s why studios like Pixar end up
+        hiring so many animators
+
+      </p>
+    </li>
+    <li>
+      <p>
+        Jacobian IK solvers, like iTaSC, the IK solver used by Blender, are slower in comparison to analytical or
+        iterative solvers at lower levels of complexity. While Jacobian IK solvers do scale better, it was the worse
+        choice for this project, which had little complexity in terms of its IK solving. However, Blender does not
+        provide the option to change the IK solver being used under the hood, and it worked well enough for our
+        purposes, so we did not change it. However, this animation is technically less optimal than it could be.
+
+      </p>
+    </li>
+    <li>
+      <p>
+        The 3D models we produced are complex and have a variety of materials with lots of different settings, bump maps
+        and textures applied. This makes the lighting and shading, which already are slow due to being raycast, even
+        slower. Adding more complexity to the scene would only worsen the problem. In terms of scalability, this is
+        quite the computational bottleneck, but can’t be easily avoided as lighting is required to produce a realistic
+        effect in the animation
+
+      </p>
+    </li>
+  </ol>
+
+  <h1 id="story">Story of the Project</h1>
+  <img width="800" src="./InitialSketch.png" />
+  <p>
+    Initially our project had the following as the description: “Using optimization algorithms, we will generate an
+    animation of a player playing a piano with realistic finger movements. This simulation strives to look as realistic
+    as possible.” For our initial sketch, which can be seen above, we quickly grabbed STL files online, imported them
+    into Blender, and put them into a configuration that we thought would look nice.
+  </p>
+  <p>
+    One of the papers we had, <a
+      href="https://dl.acm.org/doi/abs/10.1145/1599301.1599304?casa_token=6JT-KFzeKd0AAAAA:6FUpa4llFLe3ka17anLbNm_31pFubv1qNepBoUtyehVjSiFboh4ssP4tHDly6SbOEJSbHxPJuOU">CG
+      animation for piano performance</a>, had the following listed in its abstract: “This paper
+    describes the following aspects of this research program…and (iii) automatic generation of fingering using optimized
+    algorithms”. We thought that this sounded interesting, and, at the time, were considering implementing this
+    optimization to produce the proper fingering, then to animate the hand using that optimization. However, this paper
+    was dense and confusing and implementing the specific optimization algorithm involved seemed too difficult and
+    technical for us to produce. Thus, we decided to scrap the optimization part of our initial planning and focused
+    instead on producing a piano animation with realistic finger movements. How we were going to produce the realistic
+    finger movements was not decided, but we had a lot of work to do before we got to that point, and it seemed like a
+    bridge we could cross once we got there.
+
+  </p>
+  <p>
+    After that, we were able to find a couple different videos that helped us in producing the hands and the piano.
+    These were listed earlier in the “Project Files” section. The piano took somewhere in the realm of 15 to 20 hours to
+    complete, and had many revisions over the course of its modeling (which took about 2 weeks). For the majority of the
+    time producing the piano model, it followed the video tutorial closely. However, after materials were added to the
+    piano, it was then remodeled into a more modern design. Specifically, it was modeled after a Christmas ornament one
+    of us had, which you can see in the picture below.
+
+  </p>
+  <img width="800" src="./Ornament.jpg" />
+  <p>
+    We have several images of the piano at different stages in modeling below, and you can really see it evolve over
+    time.
+  </p>
+  <img width="800" src="./PianoStep1.png" />
+  <img width="800" src="./PianoStep2.png" />
+  <img width="800" src="./PianoStep3.png" />
+  <img width="800" src="./PianoStep4.png" />
+  <img width="800" src="./PianoStep5.png" />
+  <img width="800" src="./PianoStep6.png" />
+  <img width="800" src="./PianoStep7.png" />
+  <p>
+    In terms of the hand, it was also modeled based on a video, but since it was smaller and simpler the modeling and
+    texturing took more in the realm of 2-8 hours. While we didn’t have the time to produce as realistic of a hand as we
+    hoped, you can certainly see that it made a lot of progress from it’s initial modeling
+
+  </p>
+  <img width="800" src="./HandStep1.png" />
+  <p>
+    The hand was originally designed around a branching set of bones, which gives it a blocky and cartoony look. The
+    hand was converted to a mesh with faces so that textures could be applied directly on these faces and alteration
+    could be made to the model of the hand itself to give it more detail.
+
+  </p>
+  <img width="800" src="./HandStep2.png" />
+  <img width="800" src="./HandStep3.png" />
+  <p>
+    As seen above, creases were added under the fingers that lessened the blockiness and static look of the fingers.
+    Depressions on the end of the finger were also included to mimic the look of a fingernail. As the process for
+    altering the mesh to be highly realistic would be rather time consuming, we opted to not add any alternate texture
+    for the fingernails.
+
+  </p>
+  <p>
+    As we got closer to completing the hands and piano models we were able to produce satisfying renders of the two
+    together like this (note that this is a render from near the end of the project, but we were able to produce images
+    similar to this)
+
+  </p>
+  <img width="800" src="./SatisfyingRender.png" />
+  <p>
+    However, we still had not really created the animation. Not only had we not actually touched Blender’s animation
+    suite, but we still had the conundrum of figuring out how to make the finger movements look realistic. At the time,
+    we thought that the best option was probably to create the animation and just use our eyes to determine whether the
+    movements looked realistic or not.
+
+  </p>
+  <p>
+    But, about 4 or 5 days before the final deadline, we realized we could record a video of one of us playing the
+    piano, and could just recreate that in animation. This gave us great results once done. The movements of the hand
+    feel realistic because of the realistic speed at which they move and the human way that certain fingers were chosen
+    for keys. Luckily, it turned out to not have too many technical complications, but it required many tedious hours of
+    keyframing. The final result after that is what we are submitting here.
+
+  </p>
+  <p>
+    Happily our project did not contain many unexpected developments. Things took about as long as we expected (which
+    was just a bit longer than we had hoped), and everything moved slowly and steadily, but very smoothly. It almost
+    never felt like we couldn’t see the end of the tunnel, it was just about madly dashing to the end whenever it felt
+    like we were running out of time.
+
+  </p>
+  <p>
+    Funnily enough, one of the last things we figured out was the actual name for the project. We were creating the
+    presentation video and realized we needed a name so that the intro could be more natural than “Our project,
+    Realistic Piano Animation, demonstrates a realistic piano animation”. After some brainstorming, we decided on Piano
+    Blend, which is a bit of a pun. This project is a blend of our work, it is mainly a piano made in Blender, and the
+    file that this project was created in is called `piano.blend`.
+
+  </p>
+
+  <h1 id="feedback">Feedback</h1>
+  <p>
+    Just like every other group, we presented our project one week before the final deadline. Specifically, we presented
+    the following video to everyone:
+  </p>
+  <video width="800" controls>
+    <source src="./Feedback.mp4" type="video/mp4" />
+  </video>
+  <p>
+    We got plenty of feedback on this video, but a few points were the most notable:
+
+  </p>
+  <ul>
+    <li>We should look into using drivers in Blender, which may allow us to have the keys move properly when the fingers
+      come near. This could potentially cut the amount of animation we have to do in half, but could be complex
+    </li>
+    <li>We should try animating a snippet of music that requires the hands to move across the piano more
+    </li>
+    <li>
+      We should add color to the piano
+    </li>
+    <li>
+      We should add wrinkles to the hand
+
+    </li>
+    <li>We should add sound</li>
+  </ul>
+  <p>
+    Many of these pieces of feedback were eventually implemented. The piano was given colors and textures, the video we
+    based the animation on had the hands moving at least an octave across the piano and sound was ultimately added to
+    the animation.
+
+  </p>
+  <p>
+    However, the other notable pieces of feedback were obviously not completed.
+  </p>
+  <p>
+    In terms of drivers, our group was sadly not able to figure out how to use them effectively before submission. They
+    can be complicated and finicky, and it was ultimately easier and faster to animate the piano keys by hand, even if
+    it required more animation effort.
+
+  </p>
+  <p>
+    In terms of adding wrinkles to the hand, we did intend to make the hand a lot more realistic than it ended up being,
+    but it was difficult to model something lifelike. Considering that the hand still had cartoon-y proportions at the
+    end, adding wrinkles to it looked strange, so we ultimately decided against adding those wrinkles.
+
+  </p>
+  <p>
+    Hopefully, the implemented feedback produced results the people giving the feedback hoped for. Personally, I think
+    implementing it ultimately made our project look better and made it feel more complete.
+
+  </p>
+
+  <h1 id="relationship">Relationship to the State of the Art</h1>
+  <p>
+    There are a few different papers that discuss the state of the art as it relates to musical animation.
+
+  </p>
+  <p>
+    <a href="https://arxiv.org/pdf/2203.15458.pdf">Efficient Virtual View Selection for 3D Hand Pose Estimation</a>
+    deals with the problem of hand pose estimation. In this problem, an algorithm is given an image of a hand. The
+    algorithm then needs to determine the location of the joints in a hand’s skeleton. This is useful for musical
+    animation because you can record a player playing the instrument normally and then produce pose skeletons from that
+    video without any special equipment. Earlier works discuss algorithms that actually produce this skeleton, but this
+    paper presents a generic method that can work with any hand pose estimation algorithm to make it more accurate.
+
+  </p>
+  <img width="800" src="./HandPoseEstimation.png" />
+  <p>
+    The method can be seen in the image above. It involves taking a depth map image of the hand. This depth map is then
+    converted into a large set of 3D points. A sphere is drawn around these points, and multiple points on the sphere
+    are chosen as potential camera positions (which is what the “M views” part of the diagram shows). These camera
+    positions are only chosen in a small area around the original camera position, because rotating too far from the
+    original position results in the fake cameras getting incorrect data. Each of these camera positions then has a
+    confidence value generated for it, which describes how likely it is to help make the final hand pose better (that’s
+    the stack of M confidence values below it).
+
+  </p>
+  <p>
+    From all of these camera positions, only a few with the highest confidence value are chosen (the “N views” part of
+    the diagram). The chosen camera positions have their own depth maps generated for them from the set of 3D points
+    (so, the depth map that would’ve been made if the actual camera had taken the picture from that fake camera
+    position. This is what the “Render” part of the diagram is referencing). Then, each of these chosen camera positions
+    feed their depth map to whatever hand pose estimation algorithm and generate a pose, which is a set of 3D points
+    (the pose estimation block). The points of these poses are converted back to the original camera’s coordinate system
+    and all of the pose’s different points are averaged together to make the final pose.
+
+  </p>
+  <p>
+    This strategy only works at one depth at a time. In other words, it only works if the camera is a specific distance
+    away from the hand. This makes it harder to use for practical purposes.
+
+  </p>
+  <p>
+    In <a href="https://arxiv.org/abs/2103.10206">DanceFormer: Music Conditioned 3D Dance Generation with Parametric
+      Motion Transformer</a>, the authors look to create a method to generate long-term dance animations that have a
+    large amount of complexity and coherence to actual dance movement. Recent work in the field of realistic dance
+    animation has been focused on treating the problem space as a sequence of steps that define the positioning and
+    angle of joints. These works do not however cover how to introduce large-scale complexity into the movements and
+    don’t ensure completely coherent movement. The method the authors suggest is to design a way to generate key frames
+    of an animation and parametric curves between these key frames such that it creates coherent movement while also
+    applying this to long-scale, complex generation. The authors set out to define a set of two neural networks
+    (DanTrans) that will learn how to create realistic key frames and parametric curves respectively given an input of
+    the beats of music.
+
+  </p>
+  <p>
+    The final result will be a coherent dance animation with complexity due to the motion curves seen to the right. The
+    animation will also remain in line with the beats as the key poses are attached to these points of the input giving
+    a high-quality resulting animation tied to the music. The authors also provide a new dataset they dub PhantomDance
+    which is a set of 260 diverse dance animations directly produced by experienced animators and a professional dancer
+    from popular dance videos on YouTube. They train a separate DanceFormer on each of the PhantomDance data as well as
+    other motion datasets acknowledging that PhantomDance is the only dataset that is concurrent to its matching music.
+    In their experimentation, PhantomDance is found to be the only dataset capable of creating dance animations tied to
+    the beats of input music. The authors do not provide any limitations to their design but based on a user study, they
+    do find that DanceFormer trained on PhantomDance is capable of creating animation found to be more realistic and
+    smooth than recent papers.
+
+  </p>
+  <p>
+    The above process required extensive work from highly experienced individuals to just get training data for the
+    neural networks to learn. Though this method was very successful, it was not very practical for our needs due to the
+    time constraints along with the complexity of the setup.
+
+  </p>
+  <p>
+    Ultimately, our project looked very little like the state of the art. It mainly involved hand animation, which,
+    while still common to produce musical animation, is not technically the advanced way to do it. State of the art
+    techniques strive to use information from recordings of musicians playing their instruments to automatically
+    generate the animation. This could be in the form of estimating pose skeletons from the video, using optimization
+    algorithms on fingerings from data from musicians or by applying machine learning models to common forms and
+    transitions musicians employ, but in all cases it takes real world data from musicians actually playing the
+    instrument, and applies it programmatically to the animation. A process similar to this is not found anywhere in our
+    project.
+  </p>
+
+
+  <h1 id="extension">How the Project Could be Extended</h1>
+  <p>
+    One of the most obvious ways that we could extend this project is to improve the realism of the hands. The piano has
+    a look that is quasi-realistic, whereas the hand sadly falls somewhere closer to Pixar. The look certainly isn’t
+    bad, but the mismatch between the two art styles makes the final result look slightly more amateur.
+
+  </p>
+  <p>
+    On top of that, we could simply add more animation. Currently, we’ve animated a 5 second snippet of music, but we
+    could extend this into an entire musical phrase or an entire song.
+  </p>
+  <p>
+    Pushing that even further, we could consider adding a story to this animation and could potentially create an entire
+    movie like “Coco” or “Soul”. That would require a lot of effort, but it is a direction this project could go in.
+
+  </p>
+  <p>
+    But, beyond simply extending the time, we could also make the animation more complex. We could have musical phrases
+    that involve use of the soft, sostenuto or sustain pedal, or some combination of the three. We could also have
+    musical phrases that have different dynamics and involve accents or other musical embellishment. But, most
+    obviously, we could add more instruments, like saxophones, violins or flutes.
+
+  </p>
+  <p>
+    Further, the animation is currently sitting within a black void. There is no environment or interesting background
+    at the moment. We could put this piano playing in a jazz hall or the middle of a musical festival.
+
+  </p>
+  <p>
+    On top of that, it is a bit strange to have the hands floating in space. We could produce a character model to be
+    attached to the hands as well, and could animate it to have proper body language and expressions while playing the
+    music.
+
+  </p>
+  <p>
+    Beyond that, we could finally implement the feedback that we missed. We could set up drivers in Blender to properly
+    move the keys when the fingers get near and we could add more detailed textures to the hands.
+
+  </p>
+  <p>
+    Even more, we could implement some state of the art techniques to produce these animations faster. This could
+    involve mocap technologies, producing the pose from a video of the hands using optimized algorithms or producing the
+    fingerings using optimized algorithms.
+
+  </p>
+  <p>
+    Finally, something we toyed with, but were not able to complete, is adding sound synthesis to this project. Rather
+    than using the audio from the real video for the animation, it would be cool to produce the sounds ourselves and to
+    have those sounds properly reverberate throughout the room.
+
+  </p>
+
+
+  <script src="" async defer></script>
+</body>
+
+</html>
